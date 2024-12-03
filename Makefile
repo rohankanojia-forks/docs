@@ -2,7 +2,7 @@ SHELL := /bin/bash -o pipefail
 
 # Docs build related variables
 DOCS_BUILD_DIR ?= public
-DOCS_BUILD_CONTAINER ?= quay.io/crcont/antora:latest
+DOCS_BUILD_CONTAINER ?= quay.io/crc-org/antora:3.1.9
 DOCS_SERVE_CONTAINER ?= docker.io/httpd:alpine
 DOCS_TEST_CONTAINER ?= docker.io/wjdp/htmltest:latest
 DOCS_BUILD_TARGET ?= ./source/getting_started/master.adoc
@@ -15,7 +15,7 @@ endif
 
 .PHONY: build_docs
 build_docs:
-	${CONTAINER_RUNTIME} run -e CI -v $(CURDIR):/antora$(SELINUX_VOLUME_LABEL) --rm $(DOCS_BUILD_CONTAINER) --stacktrace antora-playbook.yml
+	${CONTAINER_RUNTIME} run -e CI -v $(CURDIR):/workspace$(SELINUX_VOLUME_LABEL) --rm $(DOCS_BUILD_CONTAINER) --stacktrace antora-playbook.yml
 
 .PHONY: docs_serve
 docs_serve: build_docs

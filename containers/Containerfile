@@ -1,5 +1,7 @@
 FROM docker.io/antora/antora
-LABEL org.opencontainers.image.source="https://github.com/crc-org/crc"
+
+LABEL org.opencontainers.image.source="https://github.com/crc-org/docs"
+
 RUN yarn global add --ignore-optional --silent \
     @antora/atlas-extension \
     @antora/cli \
@@ -8,4 +10,7 @@ RUN yarn global add --ignore-optional --silent \
     @antora/pdf-extension \
     @antora/site-generator \
     asciidoctor-kroki
-RUN antora --version
+
+RUN mkdir -p /workspace
+VOLUME /workspace
+WORKDIR /workspace
