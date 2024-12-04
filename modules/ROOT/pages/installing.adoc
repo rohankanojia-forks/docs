@@ -14,7 +14,7 @@
 .Preset and architecture compatibility
 [%header,format=csv,cols="2,1,1,1"]
 |===
-Preset, AMD63, Intel 64, Apple silicon
+Preset, AMD64, Intel 64, Apple silicon
 {ocp}, yes, yes,  yes
 {okd}, yes, yes, no
 {ushift}, yes, yes, yes
