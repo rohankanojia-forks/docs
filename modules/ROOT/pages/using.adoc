@@ -95,6 +95,66 @@ $ crc setup # Initialize environment for cluster
 $ crc start # Start the cluster
 ----
 
+[id='about-pullsecrets']
+== About Pull Secrets
+While starting cluster configured with {openshift} or {ushift} preset {prod} would request you to provide a pull secret, it's required to pull some {ocp} specific container images.
+You need to download it from the Pull Secret section of the link:https://console.redhat.com/openshift/create/local[{prod} page on the {rh} Hybrid Cloud Console].
+
+Once you provide this pull secret, it gets stored in Operating System's credential manager so that {prod} doesn't ask for pull secret again in case you delete existing cluster and create
+a new one.
+
+Please note that this pull secret would only be removed from the Operating System's credential manager when user runs [command]`{bin} cleanup` command.
+
+If you manually want to remove/update pull secret from your Operating System's credential manager configuration.
+
+[id='clearning-credential-manager-pullsecret']
+=== Clearing Pull Secret from Credential Manager
+Steps to clear entries from the Credential Manager on different operating systems.
+
+==== Windows
+
+1. Open the Control Panel.
+2. Go to `User Accounts` > `Credential Manager`.
+3. Choose `Windows Credentials`.
+4. Find the {prod} pull secret entry you want to delete.
+5. Click on the entry to expand it.
+6. Click `Remove` to delete the credential.
+
+==== Linux
+
+If you're using https://wiki.gnome.org/Projects/GnomeKeyring[GNOME Keyring]:
+
+1. Open the `Activities` overview and start typing `Passwords`.
+2. Click on `Passwords and Keys` to open https://wiki.gnome.org/Projects/GnomeKeyring[GNOME Keyring].
+3. Click on `Login` entry under `Passwords`
+4. Find the {prod} pull secret entry you want to delete.
+5. Right-click the entry you want to delete.
+6. Select `Delete` and confirm the deletion.
+
+If you're using https://github.com/KDE/kwallet[KDE Wallet]:
+
+[NOTE]
+====
+By default, https://github.com/KDE/kwallet[KDE Wallet] doesn't operate as a Secret Service Provider. We need to explicitly
+enable it by going to `System Settings` > `KDE Wallet` and enable Use KWallet for the Secret Service interface. Then you should
+be able to use {prod} with https://github.com/KDE/kwallet[KDE Wallet]
+====
+
+1. Open the `Application Launcher`  and start typing `KWalletManager`.
+2. Under `Contents` tab, click on `Secret Service` and expand it.
+3. Under expanded `Secret Service` entry, click on `Passwords` and expand it.
+4. Find the {prod} pull secret entry you want to delete.
+5. Right-click the entry you want to delete.
+6. Select `Delete` and confirm the deletion.
+
+==== MacOS
+
+1. Open `Keychain Access` from the `Applications` > `Utilities` folder.
+2. Select the keychain where the credential is stored (e.g., `login`, `iCloud`).
+3. Find the {prod} pull secret entry you want to delete.
+4. Right-click the entry and select `Delete`.
+5. Confirm the deletion when prompted.
+
 [id='setting-up']
 == Setting up {prod}
 
