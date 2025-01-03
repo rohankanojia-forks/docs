@@ -95,6 +95,102 @@ $ crc setup # Initialize environment for cluster
 $ crc start # Start the cluster
 ----
 
+[id='about-pullsecrets']
+== About Pull Secrets
+When using the {openshift} or {ushift} preset, {prod} requires your pull secret:
+
+. To pull the virtual machine bundle.
+. To pull {ocp} container images from the Red Hat registry.
+
+When you run [command]`{bin} start` the first time, when the pull secret has not been provisioned, {prod} prompts you to provide your pull secret.
+
+=== Providing your pull secret to {prod}
+
+.Prerequisites
+. Download your pull secret from the Pull Secret section of the link:https://console.redhat.com/openshift/create/local[{prod} page on the {rh} Hybrid Cloud Console] to _<your_pull_secret_file>_ location.
+
+.Procedure
+* Enter your pull secret value when {prod} prompts you to provide your pull secret.
+{prod} stores the pull secret in the Operating System's credential manager so that {prod} doesn't ask for pull secret again in case you delete existing cluster and create a new one.
++
+[subs="+attributes,+quotes"]
+----
+$ {bin} start
+...
+? Please enter the pull secret
+----
++
+[TIP]
+====
+Alternatively, specify your pull secret file location by using the `--pull-secret-file` CLI argument.
+[subs="+attributes,+quotes"]
+----
+$ {bin} start --pull-secret-file=_<your_pull_secret_file>_
+----
+====
++
+[TIP]
+====
+Alternatively, specify your pull secret file location by setting the `pull-secret-file` configuration.
+[subs="+attributes,+quotes"]
+----
+$ {bin} config set pull-secret-file _<your_pull_secret_file>_
+$ {bin} start
+----
+====
+
+Please note that this pull secret would only be removed from the Operating System's credential manager when user runs [command]`{bin} cleanup` command.
+
+If you manually want to remove or update the pull secret from your Operating System's credential manager configuration.
+
+[id='clearning-credential-manager-pullsecret']
+=== Clearing Pull Secret from Credential Manager
+Steps to clear entries from the Credential Manager on different operating systems.
+
+==== Windows
+
+. Open the Control Panel.
+. Go to `User Accounts` > `Credential Manager`.
+. Choose `Windows Credentials`.
+. Find the {prod} pull secret entry you want to delete.
+. Click on the entry to expand it.
+. Click `Remove` to delete the credential.
+
+==== Linux
+
+If you're using https://wiki.gnome.org/Projects/GnomeKeyring[GNOME Keyring]:
+
+. Open the `Activities` overview and start typing `Passwords`.
+. Click on `Passwords and Keys` to open https://wiki.gnome.org/Projects/GnomeKeyring[GNOME Keyring].
+. Click on `Login` entry under `Passwords`
+. Find the {prod} pull secret entry you want to delete.
+. Right-click the entry you want to delete.
+. Select `Delete` and confirm the deletion.
+
+If you're using https://github.com/KDE/kwallet[KDE Wallet]:
+
+[NOTE]
+====
+By default, https://github.com/KDE/kwallet[KDE Wallet] doesn't operate as a Secret Service Provider. We need to explicitly
+enable it by going to `System Settings` > `KDE Wallet` and enable Use KWallet for the Secret Service interface. Then you should
+be able to use {prod} with https://github.com/KDE/kwallet[KDE Wallet]
+====
+
+. Open the `Application Launcher`  and start typing `KWalletManager`.
+. Under `Contents` tab, click on `Secret Service` and expand it.
+. Under expanded `Secret Service` entry, click on `Passwords` and expand it.
+. Find the {prod} pull secret entry you want to delete.
+. Right-click the entry you want to delete.
+. Select `Delete` and confirm the deletion.
+
+==== MacOS
+
+. Open `Keychain Access` from the `Applications` > `Utilities` folder.
+. Select the keychain where the credential is stored (e.g., `login`, `iCloud`).
+. Find the {prod} pull secret entry you want to delete.
+. Right-click the entry and select `Delete`.
+. Confirm the deletion when prompted.
+
 [id='setting-up']
 == Setting up {prod}
 
