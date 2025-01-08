@@ -7,21 +7,93 @@
 
 [role="_abstract"]
 {prod} presets represent a managed container runtime, and the lower bounds of system resources required by the instance to run it.
-{prod} offers presets for:
+Here are various supported presets for {prod} along with their minimum system requirements:
 
-`openshift`:: {ocp}
-`okd`:: {okd}
-`microshift`::  {ushift}
+[cols="5,5,5,5,5", options="header"]
+|===
+| Preset Name | Description | CPUs | RAM | Disk space
+
+| `openshift`
+| {ocp}
+| 4
+| 10.5 GB
+| 35 GB
+
+| `okd`
+| {okd}
+| 4
+| 10.5 GB
+| 35 GB
+
+| `microshift`
+| {ushift}
+| 2
+| 4 GB
+| 35 GB
+|===
 
 On {msw} and {mac}, the {prod} guided installer prompts you for your desired preset.
 On Linux, the {ocp} preset is selected by default.
-You can change this selection using the [command]`{bin} config` command before running the [command]`{bin} setup` command.
-Only one preset can be active at a time.
 
-[role="_additional-resources"]
-.Additional resources
-* xref:installing.adoc#minimum-system-requirements[Minimum system requirements].
-* xref:configuring.adoc#changing-the-selected-preset[Changing the selected preset].
+TIP: You can change this selection using the [command]`{bin} config` command before running the [command]`{bin} setup` command.
+
+IMPORTANT: Only one preset can be active at a time.
+
+Let's take a look into each of these presets in detail:
+
+[id='openshift-preset']
+=== {openshift}
+
+`openshift` preset creates a minimal, single-node cluster for https://www.redhat.com/en/technologies/cloud-computing/openshift/container-platform[Red Hat OpenShift Container Platform]. This cluster is very similar to
+real https://www.redhat.com/en/technologies/cloud-computing/openshift/container-platform[Red Hat OpenShift Container Platform] set up in cloud environments like AWS, GCP, Azure etc. It's only meant to be used
+for development and testing purposes.
+
+This preset is the default preset used by {prod} if not explicit preset is configured.
+
+If you want to configure this preset, you can do it like this:
+[source,shell]
+----
+$ crc delete # Remove previous cluster (if present)
+$ crc config set preset openshift # Configure to use openshift preset
+$ crc setup # Initialize environment for cluster
+$ crc start # Start the cluster
+----
+
+[id='okd-preset']
+=== {okd}
+
+{okd} preset creates a minimal, single-node cluster for https://okd.io/docs/project/about[OpenShift Kubernetes Distribution]. It
+is an upstream, community-driven project that provides the core components needed to run Kubernetes. It has similar requirements
+to the OpenShift Container Platform preset.
+
+If you want to configure this preset, you can do it like this:
+[source,shell]
+----
+$ crc delete # Remove previous cluster (if present)
+$ crc config set preset okd # Configure to use okd preset
+$ crc setup # Initialize environment for cluster
+$ crc start # Start the cluster
+----
+
+[id='microshift-preset']
+=== {ushift}
+
+https://www.redhat.com/en/topics/edge-computing/microshift[{ushift}] is a lightweight Kubernetes container orchestration
+solution designed by https://www.redhat.com/en[Red Hat]. It's essentially a smaller, more resource-efficient version of
+https://www.redhat.com/en/technologies/cloud-computing/openshift[Red Hat OpenShift], optimized for edge computing.
+
+NOTE: This preset shouldn't be confused with {openshift} preset. It is tailored for environments with limited resources. {openshift} on
+the other hand, is a full-featured platform designed for larger-scale deployments and comprehensive management. For more details, please
+refer to https://github.com/openshift/microshift#user-documentation[{ushift} documentation].
+
+If you want to configure this preset, you can do it like this:
+[source,shell]
+----
+$ crc delete # Remove previous cluster (if present)
+$ crc config set preset microshift # Configure to use microshift preset
+$ crc setup # Initialize environment for cluster
+$ crc start # Start the cluster
+----
 
 [id='setting-up']
 == Setting up {prod}
