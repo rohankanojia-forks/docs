@@ -13,6 +13,8 @@ See the link:{openshift-docs-url-landing-page}[{ocp} documentation] for a full i
 
 {prod} includes the [command]`{bin}` command-line interface (CLI) to interact with the {prod} instance using the desired container runtime.
 
+Red Hat OpenShift Local is the distribution of the [command]`{bin}` CLI by Red Hat that includes a fully functional {ocp} single node bundle.
+
 [id='differences']
 == Differences from a production {ocp} installation
 
