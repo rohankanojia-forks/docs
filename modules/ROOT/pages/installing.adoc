@@ -104,7 +104,8 @@ On {msw} and {mac}, {prod} is available using a guided installer.
 * Your host machine meets the xref:minimum-system-requirements[minimum system requirements].
 
 .Procedure
-. Download the link:{crc-download-url}[latest release of {prod}] for your platform.
+. Follow the instruction in the link:{crc-download-url}[Red Hat OpenShift Local download page].
+Red Hat OpenShift Local is the distribution of the [command]`{bin}` CLI by Red Hat that includes a fully functional {ocp} single node bundle.
 
 . On {msw}, extract the contents of the archive.
 
