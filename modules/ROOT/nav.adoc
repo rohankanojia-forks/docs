@@ -1,5 +1,6 @@
-= Getting Started Guide
+= Documentation
 
+* xref:getting-started.adoc[]
 * xref:introducing.adoc[]
 * xref:installing.adoc[]
 * xref:using.adoc[]

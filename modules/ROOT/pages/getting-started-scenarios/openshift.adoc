@@ -1,0 +1,81 @@
+We will be creating a single-node cluster for https://www.redhat.com/en/technologies/cloud-computing/openshift/container-platform[Red Hat OpenShift Container Platform].
+
+Once you've downloaded and installed {prod} on your machine, you're ready to use {prod} by creating a cluster. {openshift}
+is the default cluster type that would be created when no explicit configuration is provided.
+
+**Set up environment for your cluster**
+
+Before starting cluster, you need to prepare your machine for creating a Virtual Machine. {openshift} cluster would be started
+inside that Virtual Machine. In order to do that use xref:using.adoc#setting-up[`{bin} setup`] command.
+
+Open a terminal with a user account with administrator access (but not logged in as root user) and run:
+[subs="+quotes,attributes"]
+----
+$ {bin} setup
+----
+
+**Start your cluster**
+
+Once you've set up environment for your {openshift} cluster, you can go ahead and start it.
+
+NOTE: When you'd start the cluster, you would be asked for pull secret. You need to create a Red Hat account and download
+this file from the Pull Secret section of the link:https://console.redhat.com/openshift/create/local[{prod} page on the {rh} Hybrid Cloud Console].
+
+[subs="+quotes,attributes"]
+----
+$ {bin} start
+----
+
+**Log into your cluster**
+
+Once you've created the cluster, and it's up and running, you need to log in into your {openshift} cluster. In order to do that, use {openshift} CLI ([command]`oc`).
+
+If you already have {openshift} CLI ([command]`oc`), you can start using it. If not, you can use Run the [command]`{bin} oc-env`
+command to print the command needed to add the cached [command]`oc` executable to your `$PATH`.
+
+[subs="+quotes,attributes"]
+----
+$ {bin} oc-env
+----
+
+Get the {openshift} CLI ([command]`oc`) login command using [command]`{bin} console` to login as regular user or admin.
+
+Copy login command from this {prod} command output and paste it into your terminal:
+[subs="+quotes,attributes"]
+----
+$ {bin} console --credentials
+----
+
+**Deploy a sample application to your {openshift} cluster**
+
+We will be deploying a simple Java application using a tool called https://eclipse.dev/jkube/docs/openshift-maven-plugin/[Eclipse JKube OpenShift Maven Plugin].
+
+In order to follow these steps, you would need to have these installed:
+
+- https://adoptium.net/temurin/releases/[Java Development Kit]
+- https://maven.apache.org/[Apache Maven]
+
+Once you've installed these dependencies, you can deploy any java application to {openshift} cluster.
+
+Clone Eclipse JKube repository and go to one of the quickstarts:
+
+[subs="+quotes,attributes"]
+----
+$ git clone https://github.com/eclipse-jkube/jkube.git
+$ cd jkube/quickstarts/maven/quarkus
+----
+
+Run JKube OpenShift Maven Plugin goal to build and deploy application to {openshift} cluster:
+
+[subs="+quotes,attributes"]
+----
+$ mvn package oc:build oc:resource oc:apply
+----
+
+Wait till application pod comes in ready state and access the application via route:
+
+[subs="+quotes,attributes"]
+----
+$ oc get routes
+$ curl http://quarkus-default.apps-crc.testing
+----

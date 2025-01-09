@@ -1,0 +1,50 @@
+We will be creating a single-node cluster for https://www.redhat.com/en/topics/edge-computing/microshift[{ushift}].
+
+Once you've downloaded and installed {prod} on your machine, you're ready to use {prod} by creating a cluster. https://www.redhat.com/en/topics/edge-computing/microshift[{ushift}]
+is not the default cluster type that would be created when no explicit configuration is provided.
+
+In order to instruct {prod} to create a https://www.redhat.com/en/topics/edge-computing/microshift[{ushift}] cluster, we need to update {prod} configuration:
+
+[subs="+quotes,attributes"]
+----
+$ {bin} config set preset microshift
+----
+
+**Set up environment for your cluster**
+
+Before starting cluster, you need to prepare your machine for creating a Virtual Machine. {ushift} cluster would be started
+inside that Virtual Machine. In order to do that use xref:using.adoc#setting-up[`{bin} setup`] command.
+
+Open a terminal with a user account with administrator access (but not logged in as root user) and run:
+[subs="+quotes,attributes"]
+----
+$ {bin} setup
+----
+
+**Start your cluster**
+
+Once you've set up environment for your {ushift} cluster, you can go ahead and start it.
+
+[subs="+quotes,attributes"]
+----
+$ {bin} start
+----
+
+**Deploy a sample application to your {ushift} cluster**
+
+Create a sample deployment and expose it on port 8080:
+
+[subs="+quotes,attributes"]
+----
+$ oc create deployment hello-crc --image=registry.access.redhat.com/ubi8/httpd-24
+$ oc expose deployment hello-crc --type=NodePort --port=8080
+$ oc expose svc/hello-crc
+----
+
+Wait for application pod to become ready and access application via route:
+
+[subs="+quotes,attributes"]
+----
+$ oc get routes
+$ curl http://hello-crc-default.apps.crc.testing
+----

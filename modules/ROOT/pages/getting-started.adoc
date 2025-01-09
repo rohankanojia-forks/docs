@@ -1,0 +1,26 @@
+:description: Getting Started
+= Get started!
+
+{prod} is local {openshift}, focusing on making it easy to learn and develop for {openshift}. This guide will help you
+get started with CodeReady Containers ({prod}) in OpenShift. {prod} provides a way to run OpenShift locally for development
+and testing purposes.
+
+== Getting {prod}
+In order to download and install {prod}, please refer to the xref:installing.adoc[Installation Guide].
+
+- Ensure you have the minimum hardware and software requirements for {prod}.
+- Download the latest {prod} release from the official website.
+- Install the {prod} binary and add it to your system's PATH.
+
+[id='creating-openshift-preset']
+== Creating {openshift} cluster
+include::getting-started-scenarios/openshift.adoc[]
+
+[id='creating-okd-preset']
+== Creating {okd} cluster
+include::getting-started-scenarios/okd.adoc[]
+
+
+[id='creating-microshift-preset']
+== Creating {ushift} cluster
+include::getting-started-scenarios/microshift.adoc[]
