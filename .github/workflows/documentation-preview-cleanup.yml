@@ -1,0 +1,32 @@
+name: On Pull Request Close
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  on-close:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Push updates to external repository
+        env:
+          EXTERNAL_REPO_PAT: ${{ secrets.DEPLOY_KEY }}
+          USERNAME: r0haaaan
+          REPONAME: tmp-doc-preview-testing
+        run: |
+          git remote add external https://${USERNAME}:${EXTERNAL_REPO_PAT}@github.com/${USERNAME}/${REPONAME}.git -b gh-pages
+          rm -rf preview/pr/${{ github.event.pull_request.number }}
+          git add preview/pr/${{ github.event.pull_request.number }}
+          git commit -am "deploy preview cleanup : remove preview for Pull Request #${{ github.event.pull_request.number }}"
+          git push origin gh-pages
+
+
