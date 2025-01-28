@@ -1,0 +1,49 @@
+name: Documentation Preview Generator
+
+on:
+  workflow_run:
+    workflows: [Documentation Preview Request]
+    types:
+      - completed
+
+env:
+  PREVIEW_PUBLISH_USERNAME: crc-org
+  PREVIEW_PUBLISH_REPOSITORY: crc-docs-gh-action-generated-preview
+  PREVIEW_PUBLISH_BRANCH: gh-pages
+  PREVIEW_PUBLISH_TOKEN: ${{ secrets.PREVIEW_PUBLISH_TOKEN }}
+
+jobs:
+  documentation-preview:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: documentation
+          path: ./artifact
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+      - name: Extract Pull Request ID from artifact
+        run: |
+          echo "PR_NUMBER=$(jq '.event.pull_request.number' ./artifact/github_context.json)" >> $GITHUB_ENV
+          echo "PR_SHA=$(jq -r '.event.pull_request.head.sha' ./artifact/github_context.json | cut -c 1-7)" >> $GITHUB_ENV
+          rm ./artifact/github_context.json
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ env.PREVIEW_PUBLISH_TOKEN }}
+          external_repository: ${{ env.PREVIEW_PUBLISH_USERNAME }}/${{ env.PREVIEW_PUBLISH_REPOSITORY }}
+          publish_dir: ./artifact
+          publish_branch: ${{ env.PREVIEW_PUBLISH_BRANCH }}
+          destination_dir: preview/pr/${{ env.PR_NUMBER }}/${{ env.PR_SHA}}
+          commit_message: "deploy documentation preview to GitHub Pages for PR #${{ env.PR_NUMBER }}"
+
+      - name: Comment PR with preview link
+        run: |
+          PREVIEW_URL="https://${PREVIEW_PUBLISH_USERNAME}.github.io/${PREVIEW_PUBLISH_REPOSITORY}/preview/pr/${PR_NUMBER}/${PR_SHA}/index.html"
+          curl -s --request POST \
+            --url "https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}/comments" \
+            --header "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            --header "Content-Type: application/json" \
+            --data "{\"body\":\"🚀 Documentation preview: ${PREVIEW_URL}\"}"

@@ -1,0 +1,30 @@
+name: Documentation Preview Request
+
+on:
+  pull_request: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Build docs
+        run: CI=true make build_docs
+      - name: Check links in docs
+        run: make docs_check_links
+      - name: Create robots.txt
+        run: |
+          echo "User-agent: *" > ./public/robots.txt
+          echo "Disallow: /" >> ./public/robots.txt
+      - name: Save the GH context in an artifact
+        env:
+          GH_CONTEXT: ${{ toJSON(github) }}
+        run: echo $GH_CONTEXT > ./public/github_context.json
+      - name: Upload GitHub artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation
+          path: public
+

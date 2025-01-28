@@ -1,0 +1,22 @@
+name: Documentation Preview Cleanup Request
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  on-close:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Save the GH context in an artifact
+        env:
+          GH_CONTEXT: ${{ toJSON(github) }}
+        run: echo $GH_CONTEXT > github_context.json
+      - name: Upload the GH context artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: github-context
+          path: github_context.json
+
