@@ -1,0 +1,41 @@
+name: Documentation Preview Cleanup
+
+on:
+  workflow_run:
+    workflows: [Documentation Preview Cleanup Request]
+    types:
+      - completed
+
+env:
+  PREVIEW_PUBLISH_USERNAME: ${{ secrets.PREVIEW_PUBLISH_USERNAME }}
+  PREVIEW_PUBLISH_REPOSITORY: ${{ secrets.PREVIEW_PUBLISH_REPOSITORY }}
+  PREVIEW_PUBLISH_BRANCH: ${{ secrets.PREVIEW_PUBLISH_BRANCH }}
+  PREVIEW_PUBLISH_TOKEN: ${{ secrets.PREVIEW_PUBLISH_TOKEN }}
+
+jobs:
+  on-close:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cleanup-info
+          path: .
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Extract Pull Request ID from artifact
+        run: echo "PR_NUMBER=$(cat ./pr_number.txt)" >> $GITHUB_ENV
+      - name: Push updates to external repository
+        run: |
+          git clone https://${PREVIEW_PUBLISH_USERNAME}:${PREVIEW_PUBLISH_TOKEN}@github.com/${PREVIEW_PUBLISH_USERNAME}/${PREVIEW_PUBLISH_REPOSITORY}.git -b ${PREVIEW_PUBLISH_BRANCH}
+          cd ${PREVIEW_PUBLISH_REPOSITORY}
+          rm -rf preview/pr/${PR_NUMBER}
+          git add preview/pr/${PR_NUMBER}
+          git commit -am "cleanup (preview) : remove preview for Pull Request #${PR_NUMBER}"
+          git push origin ${PREVIEW_PUBLISH_BRANCH}

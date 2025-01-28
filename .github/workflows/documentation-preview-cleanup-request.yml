@@ -1,0 +1,20 @@
+name: Documentation Preview Cleanup Request
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  on-close:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Save Pull Request to a file
+        run: echo ${{ github.event.pull_request.number }} > pr_number.txt
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cleanup-info
+          path: pr_number.txt
+

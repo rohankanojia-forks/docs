@@ -1,0 +1,30 @@
+name: Documentation Preview Request
+
+on:
+  pull_request: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Build docs
+        run: CI=true make build_docs
+      - name: Check links in docs
+        run: make docs_check_links
+      - name: Create robots.txt
+        run: |
+          echo "User-agent: *" > ./public/robots.txt
+          echo "Disallow: /" >> ./public/robots.txt
+      - name: Save pull request context to artifact directory
+        run: |
+          echo ${{ github.event.pull_request.number }} > ./public/pr_number.txt
+          echo ${{ github.sha }} | cut -c 1-7 > ./public/sha.txt
+      - name: Upload GitHub artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: documentation
+          path: public
+
