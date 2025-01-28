@@ -1,0 +1,44 @@
+name: Generate Documentation Preview
+
+on:
+  pull_request: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Build docs
+        run: CI=true make build_docs
+      - name: Check links in docs
+        run: make docs_check_links
+      - name: Create robots.txt
+        run: |
+          echo "User-agent: *" > ./public/robots.txt
+          echo "Disallow: /" >> ./public/robots.txt
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          personal_token: ${{ secrets.DEPLOY_KEY }}
+          external_repository: r0haaaan/tmp-doc-preview-testing
+          publish_dir: ./public
+          publish_branch: gh-pages
+          destination_dir: preview/pr/${{ github.event.pull_request.number }}
+          commit_message: "deploy documentation preview to GitHub Pages for PR #${{ github.event.number }}"
+
+      - name: Comment PR with preview link
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          REPO_NAME="${{ github.repository }}"
+          BASE_PATH=r0haaaan.github.io/tmp-doc-preview-testing
+          PREVIEW_URL="https://${BASE_PATH}/preview/pr/${PR_NUMBER}/index.html"
+          curl -s --request POST \
+            --url "https://api.github.com/repos/${REPO_NAME}/issues/${PR_NUMBER}/comments" \
+            --header "Authorization: Bearer $GITHUB_TOKEN" \
+            --header "Content-Type: application/json" \
+            --data "{\"body\":\"🚀 Documentation preview: ${PREVIEW_URL}\"}"
+
