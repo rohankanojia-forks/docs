@@ -1,5 +1,4 @@
-We will be creating a single-node cluster for https://www.redhat.com/en/topics/edge-computing/microshift[{ushift}].
-
+Testing
 Once you've downloaded and installed {prod} on your machine, you're ready to use {prod} by creating a cluster. https://www.redhat.com/en/topics/edge-computing/microshift[{ushift}]
 is not the default cluster type that would be created when no explicit configuration is provided.
 
