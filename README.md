@@ -1,7 +1,7 @@
 CRC User documentation; Getting Started Guide
 =============================================
 
-        This repsoitory contains the user documentation, otherwise known as
+That repsoitory contains the user documentation, otherwise known as
 "Getting Started Guide". The intention is to provide
 
   - a brief introduction
