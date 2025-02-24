@@ -24,6 +24,8 @@ jobs:
           path: ./artifact
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ github.token }}
+      - name: Print github env
+        run: echo "${{ toJSON(github) }}"
       - name: Extract Pull Request ID from artifact
         run: |
           echo "PR_NUMBER=$(jq '.event.pull_request.number' ./artifact/github_context.json)" >> $GITHUB_ENV

@@ -14,6 +14,8 @@ jobs:
         run: CI=true make build_docs
       - name: Check links in docs
         run: make docs_check_links
+      - name: Print github env
+        run: echo ${{ toJSON(github) }}
       - name: Create robots.txt
         run: |
           echo "User-agent: *" > ./public/robots.txt
