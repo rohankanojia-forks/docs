@@ -32,7 +32,7 @@ jobs:
       - name: Extract Pull Request ID from artifact
         run: |
           echo "PR_NUMBER=$(jq '.event.pull_request.number' github_context.json)" >> $GITHUB_ENV
-          rm github_context.json
+          cat github_context.json
       - name: Push updates to external repository
         run: |
           git clone https://${PREVIEW_PUBLISH_USERNAME}:${PREVIEW_PUBLISH_TOKEN}@github.com/${PREVIEW_PUBLISH_USERNAME}/${PREVIEW_PUBLISH_REPOSITORY}.git -b ${PREVIEW_PUBLISH_BRANCH}

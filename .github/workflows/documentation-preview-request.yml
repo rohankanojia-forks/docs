@@ -14,8 +14,6 @@ jobs:
         run: CI=true make build_docs
       - name: Check links in docs
         run: make docs_check_links
-      - name: Print github env
-        run: echo ${{ toJSON(github) }}
       - name: Create robots.txt
         run: |
           echo "User-agent: *" > ./public/robots.txt
@@ -23,7 +21,12 @@ jobs:
       - name: Save the GH context in an artifact
         env:
           GH_CONTEXT: ${{ toJSON(github) }}
-        run: echo $GH_CONTEXT > ./public/github_context.json
+        run: |
+          echo $GH_CONTEXT > ./public/github_context.json
+      - name: Print github event after
+        run: echo "${{ github.event.after }}"
+      - name: Print github head sha
+        run: echo "${{ github.event.pull_request.head.sha }}"
       - name: Upload GitHub artifact
         uses: actions/upload-artifact@v4
         with:
