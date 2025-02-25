@@ -25,9 +25,18 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ github.token }}
       - name: Print github head sha
+<<<<<<< HEAD
         run: echo "${{ github.event.workflow_run.head_sha }}"
+<<<<<<< HEAD
       - name: Print github event after head commit id
         run: echo "${{ github.event.workflow_run.head_commit.id }}"
+=======
+=======
+        run: echo "${{ github.event.workflow_run.head_sha}}
+>>>>>>> a90915c (temp)
+      - name: Print github event after
+        run: echo "${{ github.event.after }}"
+>>>>>>> 5e23a51 (temp)
       - name: Print complete workflow run
         run: echo "{{ github.workflow_run }}"
       - name: Extract Pull Request ID from artifact
